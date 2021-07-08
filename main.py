@@ -21,13 +21,15 @@ plt.plot(x_basson, np.abs(y_basson))
 
 # Filtre coupe bande
 
-fc = 1000
-N_h = 1024
+fc = 2000
+N_h = 32
 w0 = 1000 * 2 * np.pi
+fs = 16000
 
 n_h = np.arange(-N_h / 2, N_h / 2)
-K_h = 2 * (fc / samplingRate * N_h) + 1
+K_h = 2 * (fc / fs * N_h) + 1
 h = (1 / N_h) * (np.sin(np.pi * n_h * K_h / N_h)) / (np.sin(np.pi * n_h * N_h)+1e-20)
+h = (1/N_h) * np.sin(np.pi*n_h*K_h/N_h) / (np.sin(np.pi*n_h/N_h)+1e-20)
 H = np.fft.fftshift(np.fft.fft(h))
 plt.subplot(3, 1, 3)
 plt.plot(h)
