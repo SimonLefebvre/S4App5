@@ -7,5 +7,8 @@ samplingRate, dataBasson, dataGuitare = sounds.getSounds(False)
 
 newDataBasson = cb.coupeBande(samplingRate, dataBasson, False)
 
-indexPeak, amplitudePeak, anglePeak, frequencyPeak = peaks.getPeaks(dataGuitare, samplingRate)
-gen.generateSound(indexPeak, amplitudePeak, anglePeak, frequencyPeak, samplingRate, len(dataGuitare))
+amplitudePeak, anglePeak, frequencyPeak = peaks.getPeaks(dataGuitare, samplingRate, 465)
+gen.generateSound(amplitudePeak, anglePeak, frequencyPeak, samplingRate, len(dataGuitare), 'MyGuitare.wav')
+
+amplitudePeak, anglePeak, frequencyPeak = peaks.getPeaks(newDataBasson, samplingRate, 465)
+gen.generateSound(amplitudePeak, anglePeak, frequencyPeak, samplingRate, len(dataGuitare), 'MyBasson.wav')
