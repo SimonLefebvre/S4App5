@@ -7,7 +7,7 @@ def coupeBande(fs, data, plot):
     f0 = 1000
 
     N = 1024
-    w0 = f0 * np.pi / 22000
+    w0 = f0 * np.pi / 22050
 
     n = np.arange(-N / 2, N / 2)
     K = 2 * (fc / fs * N) + 1
