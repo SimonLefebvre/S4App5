@@ -6,7 +6,7 @@ import CoupeBande as cb
 import GetSound as sounds
 import GetPeaks as peaks
 
-samplingRate, dataBasson, dataGuitare = sounds.getSounds(False)
+samplingRate, dataBasson, dataGuitare = sounds.getSounds(True)
 
 newDataBasson = cb.coupeBande(samplingRate, dataBasson, False)
 
