@@ -1,13 +1,17 @@
 import numpy as np
-from scipy.io import wavfile as wave
+import matplotlib.pyplot as plt
 
-def generateSound(amplitudePeak, anglePeak, frequencyPeak, fs, len, name):
+def changeNote(amplitudePeak, anglePeak, fs, len, newFrequency, plot):
     n = np.arange(0, len)
     n = n * (1 / fs)
-    rep = amplitudePeak[0] * np.sin((2 * np.pi * frequencyPeak[0] * n) + anglePeak[0])
+    rep = amplitudePeak[0] * np.sin((2 * np.pi * newFrequency * n) - anglePeak[0])
 
-    for i in range(1, 31):
-        rep = rep + amplitudePeak[i] * np.sin((2 * np.pi * frequencyPeak[i] * n) + anglePeak[i])
+    for i in range(1, 32):
+        rep = rep + amplitudePeak[i] * np.sin((2 * np.pi * (newFrequency * (i + 1)) * n) - anglePeak[i])
 
-    rep = rep / 10000
-    wave.write(name, fs, rep.astype(np.int16))
+    if plot == True:
+        plt.figure()
+        plt.plot(rep)
+        plt.show()
+
+    return rep

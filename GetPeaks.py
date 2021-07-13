@@ -2,20 +2,32 @@ from scipy.signal import find_peaks
 import numpy as np
 
 
-def getPeaks(dataGuitare, fs, fFund):
-    y_guitar = np.fft.fft(dataGuitare)
-    foundPeaks, property = find_peaks(np.abs(y_guitar), distance=(fFund * 160000 / (fs)))
+# Entrées
+# Data -> raw data in time
+# fs -> Fréquence de coupure
+# fFund -> Fréquence de la fondamentale
 
-    indexPeak = np.zeros(32)
+# RETURNS
+# amplitudePeak -> Tableau des 32 peak trouvé
+# anglePeak     -> Tableau des 32 phases
+def getPeaks(data, fs, fFund, showFrequency):
+    fft = np.fft.fft(data)
+    foundPeaks, property = find_peaks(np.abs(fft), distance=(fFund * len(data) / fs))
+
     amplitudePeak = np.zeros(32)
     frequencyPeak = np.zeros(32)
     anglePeak = np.zeros(32)
 
+    offset = 0
+    if foundPeaks[0] < fFund * len(data) / fs:
+        offset = 1
+
     for i in range(0, 32):
-        indexPeak[i] = foundPeaks[i]
-        amplitudePeak[i] = np.abs(y_guitar[foundPeaks[i]])
-        anglePeak[i] = np.angle(y_guitar[foundPeaks[i]])
-        frequencyPeak[i] = indexPeak[i] * fs / 160000
+        amplitudePeak[i] = np.abs(fft[foundPeaks[i + offset]])
+        anglePeak[i] = np.angle(fft[foundPeaks[i + offset]])
+        frequencyPeak[i] = foundPeaks[i + offset] * fs / len(data)
+
+    if showFrequency == True:
         print(frequencyPeak)
 
-    return amplitudePeak, anglePeak, frequencyPeak
+    return amplitudePeak, anglePeak
