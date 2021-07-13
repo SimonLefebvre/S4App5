@@ -8,55 +8,59 @@ import numpy as np
 # generatedData: The syntetisation of the sound
 #
 # returns the generated data changed by the envelop of the .wav file
-def envelop(data, samplingRate, plot, generatedData):
-    dataFreq = np.fft.fft(np.abs(data))
-    xvalues = np.fft.fftfreq(len(dataFreq), (1.0 / samplingRate))
+def envelop(x, samplingRate, plot, generatedData):
 
     K = 885
     a = 1 / K
     start = 0
     stop = np.pi * 2
-    step = stop / len(dataFreq)
+    step = stop / len(x)
 
     w = np.arange(start, stop, step)
+    t = np.arange(0, len(x) / samplingRate, 1 / samplingRate)
 
-    H_m = (a * np.sin(K * w / 2)) / (np.sin(w / 2) + 1e-20)
-    H_m[0] = a * K
-    Enveloppe_FREQ = H_m * dataFreq;
-    if (plot == True):
-        plt.figure()
-        plt.subplot(3, 1, 1)
-        plt.stem(w, H_m)
-        plt.subplot(3, 1, 2)
-        plt.plot(xvalues, np.abs(dataFreq))
+    X = np.fft.fft(np.abs(x))
 
-        plt.subplot(3, 1, 3)
-        plt.plot(xvalues, np.abs(Enveloppe_FREQ))
-        plt.show()
+    H = (a * np.sin(K * w / 2)) / (np.sin(w / 2) + 1e-20)
+    H[0] = a * K
 
-    Enveloppe_TEMP = np.abs(np.real( np.fft.ifft(Enveloppe_FREQ)))
+    Y = H * X
+    y = np.real(np.fft.ifft(Y))
 
-    if (plot == True):
-        plt.figure()
-        plt.plot(Enveloppe_TEMP)
-        plt.show()
-
-    GeneratedDataFREQ = np.fft.fft(generatedData)
-
-    Sortie_FREQ = GeneratedDataFREQ * Enveloppe_FREQ
-    #Sortie = np.real(np.fft.ifft(Sortie_FREQ))
-    Sortie = generatedData * Enveloppe_TEMP
+    Sortie = generatedData * y
     Sortie = Sortie / 150000000
 
     if (plot == True):
-        plt.figure()
-        plt.subplot(3, 1, 1)
-        plt.plot(np.abs(GeneratedDataFREQ))
-        plt.subplot(3, 1, 2)
-        plt.plot(np.abs(Sortie_FREQ))
-        plt.subplot(3, 1, 3)
-        plt.plot(Sortie)
-        plt.show()
-        
-        
+        plt.figure('Envelop')
+
+        plt.subplot(3, 2, 1)
+        plt.ylabel('x')
+        plt.xlabel('temps (s)')
+        plt.plot(t, x)
+
+        plt.subplot(3, 2, 3)
+        plt.ylabel('y')
+        plt.xlabel('temps (s)')
+        plt.plot(t, y)
+
+        plt.subplot(3, 2, 5)
+        plt.ylabel('Note avec enveloppe')
+        plt.xlabel('temps (s)')
+        plt.plot(t, Sortie)
+
+        plt.subplot(3, 2, 2)
+        plt.ylabel('X')
+        plt.xlabel('Fréquence (Hz)')
+        plt.plot(np.fft.fftfreq(len(X), 1 / samplingRate), np.abs(X))
+
+        plt.subplot(3, 2, 4)
+        plt.ylabel('H')
+        plt.xlabel('Fréquence (Hz)')
+        plt.plot(np.fft.fftfreq(len(H), 1 / samplingRate), np.abs(H))
+
+        plt.subplot(3, 2, 6)
+        plt.ylabel('Y')
+        plt.xlabel('Fréquence (Hz)')
+        plt.plot(np.fft.fftfreq(len(Y), 1 / samplingRate), np.abs(Y))
+
     return Sortie

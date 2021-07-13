@@ -13,15 +13,21 @@ def getSounds(plot):
     x_guitar = np.fft.fftfreq(len(y_guitar), (1.0 / samplingRate))
 
     if (plot == True):
-        plt.figure()
+        plt.figure('fft des deux instruments')
+
         plt.subplot(2, 1, 1)
         plt.title('fft La# Guitar')
-        plt.plot(x_guitar, np.abs(y_guitar))
+        plt.xlabel('Fréquence (Hz)')
+        plt.ylabel('Amplitude')
         plt.semilogy()
+        plt.plot(x_guitar, np.abs(y_guitar))
+
 
         plt.subplot(2, 1, 2)
         plt.title('fft Basson')
-        plt.plot(x_basson, np.abs(y_basson))
+        plt.xlabel('Fréquence (Hz)')
+        plt.ylabel('Amplitude')
         plt.semilogy()
-        plt.show()
+        plt.plot(x_basson, np.abs(y_basson))
+
     return samplingRate, dataBasson, dataGuitare

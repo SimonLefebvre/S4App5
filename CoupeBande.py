@@ -13,13 +13,14 @@ def coupeBande(x, fs, plot):
     fc = 20  # Largeur de fréquence du coupe bande (w1) mais en Hz
     f0 = 1000  # Fréquence à filtrer (w0) mais en Hz
 
-    N = 1025  # Ordre du filtre coupe bande
-    w0 = 2 * f0 * np.pi / fs  # Fréquence a filtrer normalisé de -pi a pi
+    N = 1024  # Ordre du filtre coupe bande
+    w0 = 2 * f0 * np.pi / fs  # Fréquence a filtrer normalisé de 0 a 2pi
 
-    n = np.arange(-N / 2, N / 2, 1) # axe des x temporelle discret non normalisé
-    K = 2 * (fc / fs * N) + 2
+    n = np.arange(-N / 2, N / 2, 1)
+    K = 1#np.round(2 * (fc / fs * N) + 1) + 1
+    print(K)
 
-    # Filtre passe bas à fréquence de coupure à 1000 Hz
+    # Filtre passe bas à fréquence de coupure à 20 Hz
     h_low = (1 / N) * np.sin(np.pi * n * K / N) / (np.sin(np.pi * n / N) + 1e-20)
     h_low[int(N / 2)] = K / N
 
@@ -52,7 +53,7 @@ def coupeBande(x, fs, plot):
         plt.title('fft avant filtre')
 
         plt.subplot(3, 2, 3)
-        plt.plot(np.fft.fftfreq(len(H), 1 / fs), np.abs(H))
+        plt.plot(np.fft.fftfreq(len(H), 1 / fs), 20*np.log10(np.abs(H)))
         plt.title('filtre')
 
         plt.subplot(3, 2, 5)
@@ -74,7 +75,5 @@ def coupeBande(x, fs, plot):
         plt.subplot(3, 2, 6)
         plt.plot(m, y)
         plt.title('data apres filtre')
-
-        plt.show()
 
     return y
