@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.io import wavfile as wave
 import matplotlib.pyplot as plt
+import addcopyfighandler
 
 import CoupeBande as cb
 import GetSound as sounds
@@ -10,7 +11,9 @@ import PasserParEnBas as env
 
 plot = True
 
-samplingRate, dataBasson, dataGuitare = sounds.getSounds(False)
+plt.rcParams['savefig.format'] = 'svg'
+
+samplingRate, dataBasson, dataGuitare = sounds.getSounds(True)
 
 newDataBasson = cb.coupeBande(dataBasson, samplingRate, True)
 
@@ -60,6 +63,7 @@ bMusic = np.append(bMusic, bNote4[24000::])
 
 #plt.figure()
 #plt.plot(np.fft.fftfreq(len(gNote1), 1/ samplingRate), 20*np.log10((np.abs(np.fft.fft(gNote1)))))
+plt.tight_layout()
 plt.show()
 
 wave.write("MusicGuitare.wav", samplingRate, gMusic.astype(np.int16))

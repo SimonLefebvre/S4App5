@@ -26,8 +26,8 @@ def getPeaks(data, fs, fFund, showFrequency):
         amplitudePeak[i] = np.abs(fft[foundPeaks[i + offset]])
         anglePeak[i] = np.angle(fft[foundPeaks[i + offset]])
         frequencyPeak[i] = foundPeaks[i + offset] * fs / len(data)
+        if showFrequency == True:
+            print("%.2f" % anglePeak[i])
 
-    if showFrequency == True:
-        print(frequencyPeak)
-
+    print('\n')
     return amplitudePeak, anglePeak
